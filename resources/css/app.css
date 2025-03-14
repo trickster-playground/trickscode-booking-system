@@ -68,6 +68,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
     *,
     ::after,
     ::before,
@@ -111,6 +112,12 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.87 0 0);
+    --fc-day-today-bg: #e8f0f8;
+
+    --fc-button-bg: #0073e6;
+    --fc-button-hover-bg: #005bb5;
+    --fc-button-border: #0051ff;
+    --fc-button-text: #ffffff;
 }
 
 .dark {
@@ -146,6 +153,12 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(0.269 0 0);
     --sidebar-ring: oklch(0.439 0 0);
+
+    --fc-day-today-bg: #0a2a42;
+    --fc-button-bg: #1f2937;
+    --fc-button-hover-bg: #2563eb;
+    --fc-button-border: #1e40af;
+    --fc-button-text: #ffffff;
 }
 
 @layer base {
@@ -156,4 +169,77 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+::selection {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    background-color: hsl(var(--background));
+    border-radius: 8px;
+    scrollbar-width: thin;
+}
+
+::-webkit-scrollbar-thumb {
+    color: hsl(var(--primary));
+    background-color: hsl(var(--primary));
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #000000;
+}
+
+/* Calendar */
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: var(--fc-day-today-bg);
+}
+
+.fc .fc-button-primary {
+    background-color: var(--fc-button-bg);
+    border-color: var(--fc-button-border);
+    color: var(--fc-button-text);
+}
+
+.fc .fc-button-primary:hover {
+    background-color: var(--fc-button-hover-bg);
+    border-color: var(--fc-button-hover-bg);
+    color: #ffffff;
+}
+
+
+
+/* Button */
+
+.comic-button {
+    display: inline-flex;
+    justify-items: center;
+    align-items: center;
+    padding: 5px 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background-color: #0051ff;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    box-shadow: 5px 5px 0px #000000;
+    transition: all 0.3s ease;
+}
+
+.comic-button:hover {
+    background-color: #fff;
+    color: #0051ff;
+    border: 2px solid #0051ff;
+    box-shadow: 5px 5px 0px #0051ff;
+}
+
+.comic-button:active {
+    border-color: #0051ff;
+    box-shadow: none;
+    transform: translateY(4px);
 }
