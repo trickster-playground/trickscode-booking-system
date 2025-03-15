@@ -109,4 +109,5 @@ class BookingController extends Controller
   {
     //
   }
+
 }

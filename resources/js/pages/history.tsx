@@ -16,7 +16,7 @@ import {
 
 interface Booking {
   id: number;
-  order_id: string;
+  uuid: string;
   service: string;
   total_price: number;
   start_date: string;
@@ -64,6 +64,7 @@ export default function History() {
                 <TableCaption>List of your past booking transactions.</TableCaption>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>No. </TableHead>
                     <TableHead className="w-[150px]">Order ID</TableHead>
                     <TableHead>Service</TableHead>
                     <TableHead>Booking Date</TableHead>
@@ -73,9 +74,10 @@ export default function History() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {bookings?.map((booking) => (
+                  {bookings?.map((booking, index) => (
                     <TableRow key={booking.id}>
-                      <TableCell className="font-medium">{booking.id}</TableCell>
+                      <TableCell className="font-medium">{index + 1}</TableCell>
+                      <TableCell className="font-medium">{booking.uuid}</TableCell>
                       <TableCell>{booking.service}</TableCell>
                       <TableCell>{booking.start_date} - {booking.end_date}</TableCell>
                       <TableCell className={

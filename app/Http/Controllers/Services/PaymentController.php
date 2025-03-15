@@ -25,7 +25,7 @@ class PaymentController extends Controller
 
     $transaction = [
       'transaction_details' => [
-        'order_id' => "BOOKING-" . $booking->id,
+        'order_id' => $booking->uuid,
         'gross_amount' => $booking->total_price,
       ],
       'customer_details' => [
