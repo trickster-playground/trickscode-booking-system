@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 use Midtrans\Snap;
 use Midtrans\Config;
@@ -19,7 +20,13 @@ class BookingController extends Controller
    */
   public function index()
   {
-    //
+    $bookings = Booking::where('user_id', Auth::id())
+      ->orderBy('created_at', 'desc')
+      ->get();
+
+    return Inertia::render('history', [
+      'bookings' => $bookings,
+    ]);
   }
 
   /**
@@ -54,35 +61,7 @@ class BookingController extends Controller
       'payment_status' => 'pending',
     ]);
 
-    // **Konfigurasi Midtrans**
-    Config::$serverKey = config('midtrans.server_key');
-    Config::$isProduction = false;
-    Config::$isSanitized = true;
-    Config::$is3ds = true;
-
-    $transaction = [
-      'transaction_details' => [
-        'order_id' => "BOOKING-" . $booking->id,
-        'gross_amount' => $booking->total_price,
-      ],
-      'customer_details' => [
-        'email' => Auth::user()->email,
-      ],
-      'callbacks' => [
-        'finish' => url('/dashboard'),
-      ]
-    ];
-
-    try {
-      $snapToken = Snap::getSnapToken($transaction);
-      $booking->update(['snap_token' => $snapToken]);
-
-      return Inertia::render('services/CreateBooking', [
-        'snapToken' => $snapToken,
-      ]);
-    } catch (\Exception $e) {
-      return back()->withErrors(['error' => 'Gagal membuat transaksi Midtrans: ' . $e->getMessage()]);
-    }
+    return redirect()->route('bookings.show', $booking->id);
   }
 
 
@@ -91,7 +70,11 @@ class BookingController extends Controller
    */
   public function show(string $id)
   {
-    //
+    $booking = Booking::findOrFail($id);
+
+    return Inertia::render('services/BookingDetail', [
+      'booking' => $booking,
+    ]);
   }
 
   /**
@@ -105,9 +88,18 @@ class BookingController extends Controller
   /**
    * Update the specified resource in storage.
    */
-  public function update(Request $request, string $id)
+  public function update(Request $request, $id)
   {
-    //
+    Log::info('Booking Update Request:', $request->all());
+
+    $booking = Booking::findOrFail($id);
+    $booking->payment_status = $request->transaction_status;
+    $booking->transaction_status = $request->transaction_status;
+    $booking->midtrans_order_id = $request->midtrans_order_id;
+    $booking->payment_type = $request->payment_type;
+    $booking->save();
+
+    return response()->json(['message' => 'Booking updated']);
   }
 
   /**

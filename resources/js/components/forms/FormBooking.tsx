@@ -3,11 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 import { SharedData } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { differenceInDays, format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
+
+import { toast } from "sonner"
 
 declare global {
   interface Window {
@@ -19,7 +22,6 @@ const FormBooking = () => {
   const page = usePage<SharedData>();
   const { auth } = page.props;
   const { snapToken } = usePage().props;
-  console.log('Snap Token:', snapToken);
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [service, setService] = useState<string | null>(null);
@@ -76,7 +78,11 @@ const FormBooking = () => {
     console.log('Booking Data:', data);
     post('/bookings', {
       onSuccess: () => {
-        alert('Booking berhasil disimpan!');
+        setTimeout(() => {
+          toast("Booking Berhasil!", {
+            description: "Event has been created.",
+          });
+        }, 500);
         reset('startDate', 'endDate', 'service', 'totalPrice');
       },
       onError: (errors) => {
@@ -87,11 +93,11 @@ const FormBooking = () => {
   };
 
   useEffect(() => {
-    const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY; // Ambil dari .env
+    const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
 
 
     if (!clientKey) {
-      console.error("MIDTRANS_CLIENT_KEY tidak ditemukan di .env");
+      console.error("MIDTRANS_CLIENT_KEY tidak ditemukan!");
       return;
     }
     const script = document.createElement("script");
@@ -213,7 +219,6 @@ const FormBooking = () => {
           Booking
         </Button>
       </form>
-
 
       {snapToken ? (
         <Button onClick={paymentPopup} className="comic-button h-12 hover:cursor-pointer">
