@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Services;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 use Midtrans\Snap;
@@ -32,7 +31,7 @@ class PaymentController extends Controller
         'email' => Auth::user()->email,
       ],
       'callbacks' => [
-        'finish' => url('/bookings'),
+        'finish' => route('bookings.success', $booking->id),
       ],
     ];
 

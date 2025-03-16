@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { ArrowBigLeft, ReceiptText } from 'lucide-react';
 import { toast } from "sonner"
 
@@ -44,9 +44,6 @@ export default function BookingDetail({ booking }: BookingDetailProps) {
     },
   ];
 
-  console.log(booking);
-
-
   useEffect(() => {
     const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
 
@@ -65,7 +62,6 @@ export default function BookingDetail({ booking }: BookingDetailProps) {
       document.body.removeChild(script);
     };
   }, []);
-
 
   const handlePayment = (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,9 +102,6 @@ export default function BookingDetail({ booking }: BookingDetailProps) {
 
     window.snap.pay(snapToken, {
       onSuccess: async function (result: any) {
-        console.log("Pembayaran Berhasil", result);
-        alert("Pembayaran Berhasil!");
-
         try {
           await new Promise((resolve, reject) => {
             router.put(
@@ -128,25 +121,31 @@ export default function BookingDetail({ booking }: BookingDetailProps) {
             );
           });
 
-          console.log("Data pembayaran berhasil diperbarui.");
+          router.visit(route("bookings.success", booking.id));
+
+          setTimeout(() => {
+            toast("Pembayaran berhasil!", {
+              description: "Payment completed.",
+            });
+          }, 500);
         } catch (error) {
-          console.error("Gagal menyimpan data pembayaran:", error);
-          alert("Terjadi kesalahan. Coba lagi!");
+          setTimeout(() => {
+            toast("Something went wrong!", {
+              description: "Please try again.",
+            });
+          }, 500);
         }
       },
 
       onPending: (result: any) => {
-        console.log("Menunggu Pembayaran", result);
         alert("Pembayaran sedang diproses!");
       },
 
       onError: (result: any) => {
-        console.log("Pembayaran Gagal", result);
         alert("Pembayaran gagal, coba lagi!");
       },
 
       onClose: () => {
-        console.log("Popup ditutup");
         alert("Anda menutup pembayaran sebelum selesai.");
       },
     });

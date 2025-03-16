@@ -8,10 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 
-use Midtrans\Snap;
-use Midtrans\Config;
 
 class BookingController extends Controller
 {
@@ -90,7 +87,6 @@ class BookingController extends Controller
    */
   public function update(Request $request, $id)
   {
-    Log::info('Booking Update Request:', $request->all());
 
     $booking = Booking::findOrFail($id);
     $booking->payment_status = $request->transaction_status;
@@ -99,7 +95,7 @@ class BookingController extends Controller
     $booking->payment_type = $request->payment_type;
     $booking->save();
 
-    return response()->json(['message' => 'Booking updated']);
+    return redirect()->route('bookings.show', $booking->id);
   }
 
   /**
@@ -110,4 +106,10 @@ class BookingController extends Controller
     //
   }
 
+  public function success(Booking $booking)
+  {
+    return Inertia::render('services/BookingSuccess', [
+      'booking' => $booking
+    ]);
+  }
 }

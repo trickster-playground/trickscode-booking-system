@@ -95,7 +95,6 @@ const FormBooking = () => {
   useEffect(() => {
     const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
 
-
     if (!clientKey) {
       console.error("MIDTRANS_CLIENT_KEY tidak ditemukan!");
       return;
@@ -179,7 +178,6 @@ const FormBooking = () => {
           {errors.service && <p className="text-sm text-red-500">{errors.service}</p>}
         </div>
 
-        {/* Harga Total */}
         {totalPrice > 0 && (
           <div className="mt-4 rounded-lg border bg-gray-100 p-4 dark:bg-gray-800">
             <p className="text-lg font-bold">Total Harga: Rp {totalPrice.toLocaleString()}</p>

@@ -33,7 +33,7 @@ function renderEventContent(eventInfo: EventContentArg) {
   return (
     <div className="text-center">
       <b>{eventInfo.timeText}</b>
-      <span className="ml-1">{`Booking ${eventInfo.event.title}`}</span>
+      <span className="ml-1">{`${eventInfo.event.title}`}</span>
     </div>
   );
 }
